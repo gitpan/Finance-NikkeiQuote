@@ -2,3 +2,5 @@ Revision history for Perl extension Finance::NikkeiQuote.
 
 0.5  Sat Jun 23 2001
 	- CPAN version;
+0.5.1 Sun Nov 3 2002
+	- change parameters, because of Nikkei's site design change;

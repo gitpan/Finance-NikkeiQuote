@@ -12,7 +12,7 @@ $infoUrl =
   'http://marketsearch.nikkei.co.jp/cdb/compinfo.cfm?scode=*SCODE*';
 $range25Url =
   'http://marketsearch.nikkei.co.jp/cdb/mprice.cfm?scode=*SCODE*';
-$VERSION = '0.5';
+$VERSION = '0.5.1';
 
 sub new
 {
@@ -53,9 +53,9 @@ sub gettoday
   $url = $todayUrl;
   $url =~ s/\*SCODE\*/$self->{SCODE}/e;
   $html = $self->_gethtml($url);
-  $te = new HTML::TableExtract(depth => 2,gridmap => 0);
+  $te = new HTML::TableExtract(depth => 2);
   $te->parse($html);
-  $ts = ($te->table_states)[2];
+  $ts = ($te->table_states)[1];
   @ret = (@{($ts->rows)[1]})[0,1,2,3,5];
   map{m/([\d,-]+)/; my $tmp = $1; $tmp =~ s/,//g; $_ = $tmp}@ret;
   return wantarray ? @ret : \@ret;
@@ -68,9 +68,9 @@ sub getinfo
   $url = $infoUrl;
   $url =~ s/\*SCODE\*/$self->{SCODE}/e;
   $html = $self->_gethtml($url);
-  $te = new HTML::TableExtract(depth => 1,gridmap => 0);
+  $te = new HTML::TableExtract(depth => 1);
   $te->parse($html);
-  $ts = ($te->table_states)[16];
+  $ts = ($te->table_states)[12];
   @ret = (@{($ts->rows)[0]}[1],@{($ts->rows)[1]}[1]);
   @ret = map{s/^\s+//; s/\s+$//; $_}@ret;
   return wantarray ? @ret : \@ret;
@@ -83,9 +83,9 @@ sub getrange25
   $url = $range25Url;
   $url =~ s/\*SCODE\*/$self->{SCODE}/e;
   $html = $self->_gethtml($url);
-  $te = new HTML::TableExtract(depth => 1,gridmap => 0);
+  $te = new HTML::TableExtract(depth => 1);
   $te->parse($html);
-  $ts = ($te->table_states)[24];
+  $ts = ($te->table_states)[20];
   for (0..25){
     $ret[$_] = [map{
                  s/\s+//g;
